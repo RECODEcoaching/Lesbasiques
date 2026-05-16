@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Basiques — RECODE Coaching</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --violet: #7C3AED;
+    --lavande: #EDE9FE;
+    --lavande-mid: #C4B5FD;
+    --noir: #1D1D1F;
+    --gris: #6E6E73;
+    --bg: #FAFAFA;
+    --bg2: #F5F5F7;
+    --white: #FFFFFF;
+    --border: rgba(0,0,0,0.08);
+    --violet-border: rgba(124,58,237,0.2);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--noir); font-family: 'Open Sans', sans-serif; font-weight: 400; font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+  .hero { background: var(--noir); padding: 48px 24px 40px; }
+  .hero-handle { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lavande-mid); margin-bottom: 20px; display: block; }
+  .accent-line { width: 28px; height: 3px; border-radius: 2px; background: var(--violet); margin-bottom: 16px; }
+  .hero h1 { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: var(--white); margin-bottom: 16px; }
+  .hero h1 span { color: var(--lavande-mid); }
+  .hero p { font-size: 14px; color: var(--gris); line-height: 1.65; }
+
+  .nav-wrap { background: var(--white); border-bottom: 1px solid var(--border); padding: 14px 24px; overflow-x: auto; scrollbar-width: none; display: flex; gap: 8px; }
+  .nav-wrap::-webkit-scrollbar { display: none; }
+  .pill { flex-shrink: 0; font-family: 'Open Sans', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gris); background: var(--bg2); border: 1px solid var(--border); padding: 6px 14px; border-radius: 20px; text-decoration: none; cursor: pointer; transition: all 0.18s; }
+  .pill:hover { background: var(--lavande); color: var(--violet); border-color: var(--violet-border); }
+
+  .progress-wrap { display: none; position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--border); padding: 10px 24px; align-items: center; gap: 12px; }
+  .progress-bar { flex: 1; height: 3px; background: var(--bg2); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--violet); border-radius: 3px; transition: width 0.3s ease; width: 0%; }
+  .progress-text { font-size: 11px; font-weight: 700; color: var(--gris); white-space: nowrap; }
+
+  /* ── INSTRUCTION BANNER ── */
+  .instruction-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--lavande);
+    font-size: 13px;
+    color: #5C3ABE;
+    font-weight: 500;
+  }
+  .instruction-banner strong { font-weight: 800; color: var(--violet); }
+  .instruction-icon { font-size: 15px; }
+
+  /* ── SECTIONS WRAP ── */
+  .sections-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px 16px 16px;
+    background: var(--bg);
+  }
+
+  /* ── ACCORDEON DETAILS/SUMMARY ── */
+  .section { padding: 0; border: none; background: transparent; }
+
+  .section-details {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(124,58,237,0.1);
+    border-top: 3px solid var(--violet);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+    transition: box-shadow 0.22s ease, transform 0.18s ease;
+    margin: 0;
+  }
+
+  .section-details:hover {
+    box-shadow: 0 8px 32px rgba(124,58,237,0.14), 0 2px 8px rgba(0,0,0,0.05);
+    transform: translateY(-2px);
+  }
+
+  .section-details[open] {
+    box-shadow: 0 10px 40px rgba(124,58,237,0.16), 0 2px 8px rgba(0,0,0,0.06);
+    transform: translateY(0);
+  }
+
+  summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 20px;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 20px;
+    transition: background 0.18s;
+  }
+  summary::-webkit-details-marker { display: none; }
+
+  .section-banner-sum {
+    background: transparent;
+  }
+  .section-banner-sum:hover {
+    background: rgba(124,58,237,0.03);
+  }
+  .section-banner-light-sum {
+    background: transparent;
+  }
+  .section-banner-light-sum:hover {
+    background: rgba(124,58,237,0.03);
+  }
+
+  .section-details[open] summary {
+    border-radius: 20px 20px 0 0;
+  }
+
+  .summary-left { flex: 1; }
+
+  .section-label {
+    display: inline-block;
+    background: var(--lavande);
+    color: var(--violet);
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(124,58,237,0.15);
+  }
+
+  .section-banner-sum .section-title {
+    color: var(--noir);
+    font-size: 18px; font-weight: 800;
+    letter-spacing: -0.02em; line-height: 1.2;
+  }
+  .section-banner-light-sum .section-title {
+    color: var(--noir);
+    font-size: 18px; font-weight: 800;
+    letter-spacing: -0.02em; line-height: 1.2;
+  }
+
+  /* ── PLUS ICON ── */
+  .summary-plus {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 14px;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1;
+    transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), background 0.18s;
+    position: relative;
+  }
+
+  .section-banner-sum .summary-plus {
+    background: var(--lavande);
+    color: var(--violet);
+    border: 1.5px solid rgba(124,58,237,0.2);
+  }
+  .section-banner-light-sum .summary-plus {
+    background: var(--lavande);
+    color: var(--violet);
+    border: 1.5px solid rgba(124,58,237,0.2);
+  }
+
+  .section-details[open] .summary-plus {
+    transform: rotate(45deg);
+    background: var(--violet) !important;
+    color: var(--white) !important;
+    border-color: var(--violet) !important;
+  }
+
+  /* Open state: violet top border accent */
+  .section-details[open] summary {
+    border-bottom: 1px solid rgba(124,58,237,0.12);
+  }
+
+  .section-banner { display: none; }
+  .section-banner-light { display: none; }
+
+  .section-body {
+    padding: 16px 16px 12px;
+    background: rgba(245,243,255,0.5);
+    border-radius: 0 0 17px 17px;
+    border-top: 1px solid rgba(124,58,237,0.08);
+  }
+
+  /* ── SECTION VARIANTS ── */
+
+  /* WHITE — Training, Hormones */
+  .sd-white {
+    background: var(--white);
+    border-top: 3px solid var(--violet);
+    border-color: rgba(124,58,237,0.12);
+  }
+  .sd-white summary { background: transparent; }
+  .sd-white .section-body { background: var(--bg2); border-top: 1px solid rgba(0,0,0,0.06); }
+  .sd-white .section-title { color: var(--noir); }
+  .sd-white .section-label { background: var(--lavande); color: var(--violet); border-color: rgba(124,58,237,0.15); }
+  .sd-white .summary-plus { background: var(--lavande); color: var(--violet); border-color: rgba(124,58,237,0.2); }
+
+  /* sd-lavande removed */
+
+  /* DARK — Mindset, Vie perso */
+  .sd-dark {
+    background: var(--noir);
+    border-top: 3px solid var(--violet);
+    border-color: rgba(124,58,237,0.3);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 1px 4px rgba(0,0,0,0.15);
+  }
+  .sd-dark:hover {
+    box-shadow: 0 8px 36px rgba(124,58,237,0.2), 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .sd-dark[open] {
+    box-shadow: 0 10px 40px rgba(124,58,237,0.22), 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .sd-dark summary { background: transparent; }
+  .sd-dark summary:hover { background: rgba(255,255,255,0.03); }
+  .sd-dark .section-body { background: rgba(255,255,255,0.04); border-top: 1px solid rgba(255,255,255,0.07); }
+  .sd-dark .section-title { color: var(--white); }
+  .sd-dark .section-label { background: rgba(124,58,237,0.25); color: var(--lavande-mid); border-color: rgba(196,181,253,0.2); }
+  .sd-dark .summary-plus { background: rgba(196,181,253,0.12); color: var(--lavande-mid); border-color: rgba(196,181,253,0.2); }
+  .sd-dark[open] .summary-plus { background: var(--violet) !important; color: var(--white) !important; border-color: var(--violet) !important; }
+  .sd-dark .card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.07); }
+  .sd-dark .card-title { color: var(--white); }
+  .sd-dark .card p { color: #9E9EA8; }
+  .sd-dark .card-dark { background: rgba(255,255,255,0.03); }
+  .sd-dark .highlight { background: rgba(124,58,237,0.2); color: var(--lavande-mid); }
+  .sd-dark .nuance { background: rgba(255,255,255,0.05); color: #9E9EA8; border-color: var(--violet); }
+  .sd-dark .action-block { border-color: rgba(124,58,237,0.4); }
+  .sd-dark .signal-list li { color: #9E9EA8; border-color: rgba(255,255,255,0.07); }
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 20px; margin-bottom: 10px; }
+  .card-dark { background: var(--noir); border-radius: var(--radius); padding: 22px 20px; margin-bottom: 10px; }
+  .card-title { font-size: 14px; font-weight: 700; color: var(--noir); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; line-height: 1.3; }
+  .card-title::before { content: ''; width: 28px; min-width: 28px; height: 3px; border-radius: 2px; background: var(--violet); }
+  .card-dark .card-title { color: var(--white); }
+  .card p, .card-dark p { font-size: 13.5px; color: var(--gris); line-height: 1.7; }
+  .card p + p, .card-dark p + p { margin-top: 10px; }
+  .card-dark p { color: #8E8E93; }
+
+  .highlight { background: var(--lavande); border-radius: var(--radius-sm); padding: 14px 16px; margin: 12px 0; font-size: 13px; font-weight: 600; color: var(--violet); line-height: 1.6; }
+  .nuance { background: var(--bg2); border-left: 3px solid var(--violet); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 14px 16px; margin: 12px 0; font-size: 13px; font-style: italic; color: var(--gris); line-height: 1.65; }
+  .card-dark .nuance { background: rgba(255,255,255,0.05); color: #8E8E93; }
+
+  .tag { display: inline-flex; align-items: center; gap: 5px; background: var(--lavande); border-radius: 6px; padding: 4px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #5C3ABE; margin-bottom: 10px; }
+  .tag::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--violet); flex-shrink: 0; }
+
+  .table-wrap { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin: 12px 0; }
+  .table-head { display: grid; grid-template-columns: 1fr 1fr; background: var(--bg2); border-bottom: 1px solid var(--border); }
+  .table-head div { padding: 10px 14px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .table-head div:first-child { color: #DC2626; border-right: 1px solid var(--border); }
+  .table-head div:last-child { color: #059669; }
+  .table-row { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
+  .table-row:last-child { border-bottom: none; }
+  .table-row div { padding: 10px 14px; font-size: 12.5px; line-height: 1.5; color: var(--gris); }
+  .table-row div:first-child { border-right: 1px solid var(--border); color: #DC2626; }
+  .table-row div:last-child { color: #059669; }
+
+  .patho-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; }
+  .patho-card h4 { font-size: 14px; font-weight: 700; color: var(--noir); margin-bottom: 8px; line-height: 1.3; }
+  .patho-card p { font-size: 13px; color: var(--gris); line-height: 1.65; }
+
+  .signal-list { list-style: none; margin-top: 6px; }
+  .signal-list li { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--gris); }
+  .signal-list li:last-child { border-bottom: none; }
+  .signal-list li::before { content: '→'; color: var(--violet); font-weight: 700; flex-shrink: 0; }
+
+  .quiz-intro { background: var(--noir); border-radius: var(--radius); padding: 22px 20px; margin-bottom: 28px; text-align: center; }
+  .quiz-intro .accent-line { margin: 0 auto 14px; }
+  .quiz-intro p { font-size: 13px; font-style: italic; color: var(--gris); }
+  .quiz-section-title { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--violet); margin: 24px 0 12px; }
+
+  .q-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; }
+  .q-num { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--violet); margin-bottom: 6px; }
+  .q-text { font-size: 14px; font-weight: 700; color: var(--noir); margin-bottom: 16px; line-height: 1.4; }
+
+  .answer { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer; transition: all 0.18s; margin-bottom: 8px; }
+  .answer:last-child { margin-bottom: 0; }
+  .answer input[type="radio"] { display: none; }
+  .radio-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.15); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.18s; }
+  .radio-dot::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--violet); opacity: 0; transition: opacity 0.18s; }
+  .answer.selected { background: var(--lavande); border-color: var(--violet-border); }
+  .answer.selected .radio-dot { border-color: var(--violet); }
+  .answer.selected .radio-dot::after { opacity: 1; }
+  .answer-label { font-size: 13px; color: var(--gris); line-height: 1.55; flex: 1; }
+  .answer.selected .answer-label { color: var(--noir); font-weight: 600; }
+  .score-badge { font-size: 10px; font-weight: 700; color: var(--gris); background: var(--bg2); padding: 2px 7px; border-radius: 6px; flex-shrink: 0; margin-top: 2px; }
+  .answer.selected .score-badge { background: var(--violet); color: var(--white); }
+
+  .submit-area { padding: 8px 0 0; }
+  .btn-primary { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 16px 24px; background: var(--violet); color: var(--white); font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: 700; border: none; border-radius: var(--radius-sm); cursor: pointer; text-decoration: none; transition: all 0.18s; }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-secondary { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 16px 24px; background: var(--lavande); color: #5C3ABE; border: 1px solid var(--violet-border); font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: 700; border-radius: var(--radius-sm); text-decoration: none; transition: all 0.18s; }
+  .btn-secondary:hover { opacity: 0.9; }
+
+  .result-card { display: none; background: var(--noir); border-radius: var(--radius); padding: 32px 24px; margin: 16px 16px; text-align: center; }
+  .result-card.visible { display: block; }
+  .result-score { font-size: 56px; font-weight: 800; letter-spacing: -0.04em; color: var(--lavande-mid); line-height: 1; margin-bottom: 4px; }
+  .result-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gris); margin-bottom: 20px; }
+  .result-accent { width: 28px; height: 3px; border-radius: 2px; background: var(--violet); margin: 0 auto 16px; }
+  .result-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: var(--white); margin-bottom: 12px; line-height: 1.2; }
+  .result-text { font-size: 13.5px; color: var(--gris); line-height: 1.7; }
+
+  .cta-stack { display: none; flex-direction: column; gap: 12px; padding: 16px 24px 48px; }
+  .cta-stack.visible { display: flex; }
+
+  .footer { background: var(--noir); padding: 24px; text-align: center; border-top: 1px solid rgba(255,255,255,0.06); }
+  .footer p { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gris); }
+  .footer span { color: var(--lavande-mid); }
+  .divider { height: 1px; background: var(--border); }
+
+  /* ── HOVER STATES & PREMIUM FEEL ── */
+  .card {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(124,58,237,0.08);
+    border-color: rgba(124,58,237,0.2);
+  }
+  .patho-card {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .patho-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(124,58,237,0.08);
+    border-color: rgba(124,58,237,0.2);
+  }
+  .card-dark {
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .card-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .highlight {
+    transition: background 0.18s ease;
+    cursor: default;
+  }
+  .highlight:hover {
+    background: #DDD6FE;
+  }
+  .pill {
+    transition: all 0.18s ease;
+  }
+  /* Answer hover */
+  .answer:not(.selected):hover {
+    background: var(--bg2);
+    border-color: var(--border);
+  }
+
+  /* ── ACTION BLOCK ── */
+  .action-block {
+    background: linear-gradient(135deg, var(--noir) 0%, #2D1B69 100%);
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin-top: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .action-block::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .action-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(124,58,237,0.2);
+    border: 1px solid rgba(124,58,237,0.4);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--lavande-mid);
+    margin-bottom: 12px;
+  }
+  .action-tag::before {
+    content: '⚡';
+    font-size: 10px;
+  }
+  .action-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .action-text {
+    font-size: 13px;
+    color: #8E8E93;
+    line-height: 1.65;
+  }
+  .action-text strong {
+    color: var(--lavande-mid);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="hero-handle">@indianaafit · RECODE Coaching</span>
+  <div class="accent-line"></div>
+  <h1>Les vrais <span>basiques</span> de ta progression</h1>
+  <p>Tu t'entraînes depuis plus de 2 ans et tu stagnes. Ce guide est fait pour comprendre pourquoi — et ce qui fait vraiment bouger les choses.</p>
+</div>
+
+<div class="nav-wrap">
+  <a class="pill" href="#training">Training</a>
+  <a class="pill" href="#nutrition">Nutrition</a>
+  <a class="pill" href="#mindset">Mindset</a>
+  <a class="pill" href="#hormones">Hormones</a>
+  <a class="pill" href="#vie-perso">Vie perso</a>
+  <a class="pill" href="#questionnaire">Questionnaire</a>
+</div>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">0 / 13</div>
+</div>
+
+
+<div class="instruction-banner">
+  <span class="instruction-icon">👆</span>
+  <span>Appuie sur le <strong>+</strong> pour dérouler chaque partie</span>
+</div>
+<div class="sections-wrap">
+
+<!-- TRAINING -->
+<div class="section" id="training">
+  <details class="section-details sd-white">
+    <summary class="section-banner-sum">
+      <div class="summary-left">
+        <div class="section-label">Partie 01</div>
+        <div class="section-title">🏋️ Training</div>
+      </div>
+      <div class="summary-plus">+</div>
+    </summary>
+  <div class="section-body">
+  <div class="card">
+    <div class="card-title">La surcharge progressive — le principe n°1</div>
+    <p>Ton corps s'adapte uniquement s'il est soumis à un stimulus plus grand que la dernière fois. Si tes charges, tes répétitions ou ton volume n'augmentent pas — ton corps n'a aucune raison de changer.</p>
+    <p>La surcharge passe aussi par la technique. Une meilleure technique, c'est plus de tension sur le muscle ciblé — un stimulus plus grand, même à charge égale.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">La cohérence avant tout</div>
+    <p>Plus tu peux rester longtemps sur un même programme, mieux c'est. Ce qui fait progresser, c'est pas le programme parfait. C'est la régularité sur un programme suffisamment bon.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Le volume et la fréquence</div>
+    <p>Selon la littérature scientifique, on se situe généralement entre 10 et 20 séries par groupe musculaire par semaine. Mais tous les muscles n'ont pas besoin du même volume ni de la même fréquence — ça dépend de tes priorités, ta récupération et ton niveau.</p>
+    <div class="highlight">Trop de volume mal récupéré = stagnation. Parfois même régression.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">L'intensité d'effort</div>
+    <p>Progresser demande d'aller proche de l'échec musculaire sur chaque série. Mais se rapprocher de l'échec, ça s'apprend — et c'est quasiment impossible sans feedback extérieur.</p>
+    <div class="nuance">Avoir mal, avoir la brûlure — ce n'est pas être proche de l'échec. Ce sont deux choses très différentes que la majorité des pratiquantes confondent pendant des années.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Le choix des exercices</div>
+    <p>On veut des exercices qui se complètent — qui travaillent le muscle dans différentes positions, avec différentes tensions. C'est pour ça que le squat et le hip thrust sont souvent associés : l'un met le fessier sous tension en position allongée, l'autre en position raccourcie.</p>
+    <p>Mais avant de choisir un exercice : as-tu le niveau de stabilité et de mobilité pour l'exécuter correctement ?</p>
+    <div class="nuance">Le squat est l'exercice phare. En réalité, très peu adapté à la majorité des pratiquantes qui n'ont pas construit la stabilité du bassin nécessaire — probablement 90% d'entre elles, y compris des intermédiaires.</div>
+    <div class="highlight">Progression logique : gobelet squat → front squat → back squat. Chaque étape construit ce que la suivante demande.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Développement global ou travail ciblé ?</div>
+    <p>Après 2 ans, deux situations sont fréquentes. Soit tu as développé tes points forts mais le reste est resté en retrait — classique avec une programmation lambda. Un travail spécifique devient alors prioritaire.</p>
+    <p>Soit tu manques globalement de masse musculaire malgré 2 ans de pratique. Dans ce cas, la question n'est pas juste "quel programme" — c'est comprendre pourquoi les bases n'ont pas produit de résultats.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Le suivi — l'outil le plus sous-estimé</div>
+    <p>Noter ses séances. Ses charges. Ses répétitions. Sans ça, tu navigues à vue. Un carnet ou une simple note sur ton téléphone — c'est non négociable.</p>
+  </div>
+  <div class="action-block">
+    <div class="action-tag">Action immédiate</div>
+    <div class="action-title">Cette semaine, ouvre une note sur ton téléphone.</div>
+    <div class="action-text">Note <strong>chaque séance</strong> : exercice, charge, séries x reps. C'est tout. Dans 4 semaines, tu auras une image claire de si tu progresses — ou pas. Sans ça, tu ne peux pas savoir.</div>
+  </div>
+  </div>
+  </details>
+</div>
+
+<!-- NUTRITION -->
+<div class="section" id="nutrition">
+  <details class="section-details sd-dark">
+    <summary class="section-banner-light-sum">
+      <div class="summary-left">
+        <div class="section-label">Partie 02</div>
+        <div class="section-title">🍽️ Nutrition</div>
+      </div>
+      <div class="summary-plus">+</div>
+    </summary>
+  <div class="section-body">
+  <div class="card">
+    <div class="card-title">Connaître sa maintenance</div>
+    <p>Avant de parler de déficit ou de surplus, il faut savoir où tu en es. Ta maintenance dépend de ton poids, ta composition corporelle, ton activité quotidienne, ton stress, ta récupération.</p>
+    <div class="highlight">Sans cet ancrage, tu navigues à vue.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Déficit, maintenance ou surplus ?</div>
+    <p>Ça dépend de ton pourcentage de masse grasse, ton niveau de masse musculaire et ton objectif réel. Exemple : une femme avec un pourcentage de masse grasse sain qui veut "sécher" mais qui manque de masse musculaire — une maintenance bien structurée permettra d'améliorer sa composition corporelle tout en progressant en training.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Une note sur le déficit</div>
+    <p>Modéré ou agressif — ce ne sont pas le bien et le mal. Ce sont deux outils adaptés à des contextes différents. Le pourcentage de déficit optimal se calcule en fonction de ta masse grasse de départ. Il existe un déficit optimal pour chaque personne, pas un déficit "bien" ou "mal" de façon absolue.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Les protéines — le plus sous-estimé</div>
+    <p>La fourchette recommandée : entre 1,6g et 2,2g par kilo de poids de corps par jour. La majorité des pratiquantes sont bien en dessous.</p>
+    <div class="nuance">La quantité par repas compte aussi. En dessous d'un certain seuil par prise — variable selon les individus — la synthèse protéique musculaire n'est pas suffisamment déclenchée. Le total quotidien ET la répartition sur la journée sont importants.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Glucides & lipides — arrêtons la stigmatisation</div>
+    <div class="table-wrap">
+      <div class="table-head"><div>❌ Idée reçue</div><div>✅ Réalité</div></div>
+      <div class="table-row"><div>Low carb = meilleur</div><div>Glucides = carburant de l'effort</div></div>
+      <div class="table-row"><div>Low fat = meilleur</div><div>Lipides = production hormonale</div></div>
+    </div>
+    <p>Les glucides alimentent directement la performance et soutiennent la récupération. Les lipides sont indispensables à la synthèse des hormones — les descendre trop bas perturbe l'équilibre hormonal.</p>
+    <div class="highlight">Sur la perte de poids pure : low carb ou low fat donnent les mêmes résultats finaux. C'est avant tout une question de préférence et d'adhésion.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">La structure alimentaire</div>
+    <p>La nutrition intuitive pure demande une conscience corporelle très fine que la plupart n'ont pas encore développée. Sans ancrage, on oscille entre restriction et excès sans jamais savoir pourquoi. On rentre dans la profondeur de ce sujet dans la partie suivante.</p>
+  </div>
+  <div class="action-block">
+    <div class="action-tag">Action immédiate</div>
+    <div class="action-title">Calcule ton apport protéique d'hier.</div>
+    <div class="action-text">Ouvre MyFitnessPal ou Cronometer, rentre ce que tu as mangé hier, et regarde le total protéines. Compare à <strong>ton poids × 1,8</strong>. Si t'es en dessous — tu sais maintenant ce qu'il faut adresser en priorité.</div>
+  </div>
+  </div>
+  </details>
+</div>
+
+<!-- MINDSET -->
+<div class="section" id="mindset">
+  <details class="section-details sd-white">
+    <summary class="section-banner-sum">
+      <div class="summary-left">
+        <div class="section-label">Partie 03</div>
+        <div class="section-title">🧠 Mindset & alimentation</div>
+      </div>
+      <div class="summary-plus">+</div>
+    </summary>
+  <div class="section-body">
+  <div class="card-dark">
+    <div class="accent-line"></div>
+    <div class="card-title">Pourquoi on commence la musculation</div>
+    <p>La plupart des femmes commencent parce qu'il y a quelque chose qui manque — confiance en soi, rapport au corps, sentiment de ne pas se sentir bien dans sa peau. C'est un point de départ légitime. La musculation va aider. Mais elle ne peut pas tout régler seule.</p>
+    <div class="nuance">Utiliser l'entraînement pour compenser un écart alimentaire ou une mauvaise journée — ce n'est pas ce pour quoi la musculation est faite. Elle construit. Elle ne rembourse pas.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">La tolérance à la lenteur</div>
+    <p>L'industrie a vendu des transformations en 8 semaines. La progression musculaire réelle se mesure en mois et en années. Construire cette tolérance à la lenteur — accepter que les résultats arrivent progressivement — c'est une compétence à part entière.</p>
+    <div class="highlight">Accepter d'être accompagnée pour construire cette tolérance, c'est souvent ce qui fait la différence.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Le cycle "je recommence"</div>
+    <p>Lundi je recommence. Après les vacances je recommence. Ce cycle n'est pas forcément un manque de volonté. C'est souvent de la procrastination — attendre d'être prête, attendre le bon moment. Notre cerveau ne sera jamais "prêt" comme on l'entend.</p>
+    <p>Et quand ce n'est pas de la procrastination, c'est souvent l'absence de structure adaptée à ta vie réelle. La vraie question : est-ce que ce que tu as mis en place est réellement tenable ?</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Le perfectionnisme — tout ou rien</div>
+    <p>La semaine parfaite ou rien. Un écart et tout s'effondre. Le perfectionnisme est déguisé en exigence et en rigueur.</p>
+    <div class="highlight">Une séance imparfaite faite vaut infiniment mieux qu'une séance parfaite qui n'a pas eu lieu.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">La comparaison</div>
+    <p>Si tu veux te comparer à quelqu'un, assure-toi de vraiment connaître son contexte — sa génétique, son histoire, ses années de pratique, sa vie. Sans ça, tu ne te compares pas à une réalité. Tu te compares à une image.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">La motivation vs la discipline</div>
+    <p>Attendre d'avoir envie pour s'entraîner, c'est s'assurer de ne pas y aller. La motivation est une émotion — elle fluctue. Ce qui permet de tenir sur le long terme, c'est une structure suffisamment simple pour être tenue même les jours sans envie.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Le tracking — un outil, pas une prison</div>
+    <p>Tracker ses apports n'est pas forcément un problème. C'est un outil. Se servir d'un outil est une compétence qui s'apprend — et ça ne veut pas dire en devenir dépendante. Tout dépend du contexte et de la façon dont on l'utilise.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Le cheat meal — la pratique qui détruit ton rapport à l'alimentation</div>
+    <p>Pas besoin d'attendre le weekend pour manger des aliments moins denses. Ton corps se fiche de savoir si on est mardi midi ou samedi soir — il répond à ce que tu lui donnes. Segmenter la semaine en "bonne alimentation" vs "écart autorisé" installe une relation binaire à la nourriture qui finit toujours par se retourner contre toi.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">La culpabilité & les aliments "bons" vs "mauvais"</div>
+    <p>L'industrie a créé une hiérarchie morale autour de la nourriture. Et on sacralise trop certains aliments — comme s'ils allaient disparaître. Ce sentiment d'urgence vient directement de leur statut "interdit". Dès qu'on enlève l'interdit, on enlève une grande partie de l'attrait compulsif.</p>
+    <div class="highlight">Un aliment n'est pas bon ou mauvais. Il a une valeur nutritionnelle dans un contexte global. C'est tout.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Manger ses émotions</div>
+    <p>La nourriture régule les émotions — c'est neurobiologique, pas un défaut de caractère. Le stress, l'ennui, la tristesse déclenchent des comportements alimentaires parce que manger active les circuits de récompense du cerveau. Le reconnaître, c'est déjà sortir de la honte.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">L'hyperphagie — mettre des mots dessus</div>
+    <p>Il y a une différence importante. L'hyperphagie boulimique est un TCA pathologique, diagnostiqué cliniquement — qui se prend en charge avec un professionnel de santé mentale.</p>
+    <p>Mais on peut avoir une relation difficile à la nourriture — des épisodes de perte de contrôle, manger sans faim réelle — sans être dans un TCA diagnostiqué. Les deux peuvent coexister.</p>
+    <div class="nuance">Si tu te reconnais dans l'un ou l'autre — c'est une information importante sur ce qu'il faut adresser en priorité.</div>
+  </div>
+  <div class="action-block">
+    <div class="action-tag">Action immédiate</div>
+    <div class="action-title">Identifie ton schéma dominant.</div>
+    <div class="action-text">Parmi ce que tu viens de lire — perfectionnisme, cycle recommencement, rapport compliqué à la nourriture — <strong>lequel te touche le plus ?</strong> Note-le. Pas pour le résoudre maintenant. Pour commencer à le voir. Ce qu'on nomme, on peut commencer à le travailler.</div>
+  </div>
+  </div>
+  </details>
+</div>
+
+<!-- HORMONES -->
+<div class="section" id="hormones">
+  <details class="section-details sd-dark">
+    <summary class="section-banner-light-sum">
+      <div class="summary-left">
+        <div class="section-label">Partie 04</div>
+        <div class="section-title">🌀 Hormones & santé</div>
+      </div>
+      <div class="summary-plus">+</div>
+    </summary>
+  <div class="section-body">
+  <div class="card">
+    <div class="card-title">La nuance d'abord</div>
+    <p>Avant de chercher une pathologie — regarder ce qu'on fait au quotidien. Le sommeil. Le stress chronique. L'alimentation. L'entraînement. Un déficit calorique tenu trop longtemps. Les hormones sont un système de communication. Quand elles dérèglent, c'est presque toujours parce qu'elles répondent à quelque chose dans ton environnement.</p>
+  </div>
+  <div class="nuance">Ce qui suit n'est pas un outil de diagnostic. Ce sont quelques exemples des situations que je rencontre le plus souvent dans mon travail — et un aperçu de comment elles jouent concrètement sur la prise de muscle et/ou la perte de graisse. Pour mieux comprendre ce que tu vis — et savoir quand orienter vers un professionnel de santé.</div>
+  <div class="patho-card">
+    <div class="tag">Pathologie</div>
+    <h4>SMOP — Syndrome Métabolique Ovarien Polyendocrinien (ex-SOPK)</h4>
+    <p>Condition hormonale et métabolique impliquant souvent une résistance à l'insuline, un excès d'androgènes et des cycles irréguliers. La résistance à l'insuline impacte la gestion des glucides et la composition corporelle. L'entraînement en résistance est l'un des outils les plus efficaces pour améliorer la sensibilité à l'insuline.</p>
+  </div>
+  <div class="patho-card">
+    <div class="tag">Pathologie</div>
+    <h4>Aménorrhée fonctionnelle hypothalamique</h4>
+    <p>Disparition des règles en réponse à un stress physiologique — déficit énergétique chronique, volume d'entraînement trop élevé, stress psychologique intense, ou une combinaison des trois. C'est un signal d'alarme. La prise en charge passe par la correction de la cause — pas par la pilule comme premier réflexe.</p>
+  </div>
+  <div class="patho-card">
+    <div class="tag">Pathologie</div>
+    <h4>Hypothyroïdie</h4>
+    <p>La thyroïde régule le métabolisme, l'énergie, la récupération. Quand elle fonctionne en dessous de son niveau optimal, tout ralentit. Fatigue chronique, récupération difficile, prise de poids inexpliquée — ces signaux méritent un bilan thyroïdien complet. TSH seule ne suffit pas toujours.</p>
+  </div>
+  <div class="patho-card">
+    <div class="tag">Pathologie</div>
+    <h4>Périménopause & ménopause</h4>
+    <p>La périménopause peut commencer dès 35-40 ans. La baisse progressive des œstrogènes modifie la composition corporelle, la récupération et la sensibilité à l'insuline. C'est précisément à cette période que la musculation devient non négociable — pour protéger la densité osseuse et maintenir la qualité de vie.</p>
+  </div>
+  <div class="patho-card">
+    <div class="tag">Digestif</div>
+    <h4>Syndrome de l'intestin irritable — SII</h4>
+    <p>Pas hormonal, mais suffisamment présent pour être nommé. Le SII se caractérise par des douleurs abdominales et ballonnements souvent déclenchés par les FODMAPs. Une approche low-FODMAP peut réduire significativement les symptômes. Avoir mal au ventre de façon chronique complique l'adhésion à une alimentation structurée et dégrade la récupération.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Les signaux à ne pas ignorer</div>
+    <ul class="signal-list">
+      <li>Cycle qui s'allonge progressivement</li>
+      <li>Règles douloureuses qui s'intensifient</li>
+      <li>SPM sévère — irritabilité, rétention d'eau, fatigue marquée</li>
+      <li>Libido en berne de façon chronique</li>
+      <li>Sommeil dégradé sur la durée</li>
+    </ul>
+    <div class="nuance" style="margin-top:12px">Ces signaux sont fréquents — ce n'est pas la même chose que normaux.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Les carences — l'intérêt des bilans sanguins</div>
+    <p>Les carences s'installent progressivement et mettent des bâtons dans les roues sans qu'on fasse toujours le lien. Parmi les plus fréquentes chez les femmes actives : le fer et la ferritine, et le magnésium. Ce ne sont que des exemples.</p>
+    <div class="highlight">Faire un bilan sanguin complet une à deux fois par an n'est pas un luxe. C'est de la maintenance.</div>
+  </div>
+  <div class="action-block">
+    <div class="action-tag">Action immédiate</div>
+    <div class="action-title">Prends rendez-vous pour un bilan sanguin.</div>
+    <div class="action-text">Demande à ton médecin : <strong>NFS, ferritine, vitamine D, TSH + T3/T4 libre, bilan hormonal de base.</strong> Si tu n'en as pas fait depuis plus d'un an — c'est le moment. Ce que tu découvriras peut changer radicalement ta stratégie.</div>
+  </div>
+  </div>
+  </details>
+</div>
+
+<!-- VIE PERSO -->
+<div class="section" id="vie-perso">
+  <details class="section-details sd-white">
+    <summary class="section-banner-sum">
+      <div class="summary-left">
+        <div class="section-label">Partie 05</div>
+        <div class="section-title">🪞 Vie perso & histoire</div>
+      </div>
+      <div class="summary-plus">+</div>
+    </summary>
+  <div class="section-body">
+  <div class="card">
+    <div class="card-title">Le contexte de vie actuel</div>
+    <p>Le stress chronique, la charge mentale, le manque de sommeil, les obligations — tout ça n'est pas séparé de ta progression. C'est directement lié. Un corps sous stress chronique est un corps en mode survie. Une stratégie qui ne tient pas compte de ta vie réelle est une stratégie qui ne tiendra pas.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Le rapport au corps — d'où ça vient</div>
+    <p>Le rapport que tu as à ton corps aujourd'hui ne s'est pas construit hier. Il s'est construit dans les commentaires reçus enfant. Dans le regard des autres à l'adolescence. Dans les comparaisons. Dans ce qu'on t'a appris — ou pas — sur ce que devait être un corps de femme.</p>
+    <div class="nuance">Travailler son corps sans regarder d'où vient ce rapport, c'est construire sur des fondations fissurées.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">L'histoire avec la nourriture</div>
+    <p>Les premiers régimes — parfois très tôt, parfois encouragés par la famille. Les règles alimentaires transmises à table, conscientes ou non. Ces règles deviennent des croyances. Ces croyances deviennent des comportements. Comprendre d'où ça vient, c'est commencer à le choisir plutôt que de le subir.</p>
+  </div>
+  <div class="card-dark">
+    <div class="accent-line"></div>
+    <div class="card-title">Les blessures émotionnelles plus profondes</div>
+    <p>Des violences — physiques, verbales, sexuelles. Des traumas anciens qui n'ont parfois jamais été nommés. Des relations qui ont abîmé l'image de soi. Ces expériences laissent des traces concrètes dans le rapport au corps et à la nourriture.</p>
+    <div class="nuance">Si tu portes quelque chose de cet ordre — ce n'est pas un obstacle. C'est une partie du travail. Et ça se travaille, avec les bonnes personnes.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Pourquoi tout ça compte dans ta progression</div>
+    <p>Les femmes qui progressent durablement ne sont pas celles qui ont le meilleur programme. Ce sont celles qui ont compris ce qu'elles portent — et qui ont accepté de travailler dessus en même temps que sur le reste.</p>
+    <div class="highlight">Ton histoire n'est pas un frein. C'est une information. Et plus tôt on la regarde en face, plus vite les choses bougent vraiment.</div>
+  </div>
+  <div class="action-block">
+    <div class="action-tag">Action immédiate</div>
+    <div class="action-title">Cartographie ton contexte réel.</div>
+    <div class="action-text">Sur une note, réponds honnêtement : <strong>combien d'heures tu dors en moyenne ? Sur 10, ton niveau de stress quotidien c'est combien ? Est-ce qu'il y a quelque chose dans ton histoire avec ton corps ou la nourriture que tu n'as jamais vraiment regardé en face ?</strong> Ces réponses sont la base de tout ce qui suit.</div>
+  </div>
+  </div>
+  </details>
+</div>
+
+<!-- QUESTIONNAIRE -->
+<div class="section" id="questionnaire">
+  <details class="section-details sd-dark">
+    <summary class="section-banner-light-sum">
+      <div class="summary-left">
+        <div class="section-label">Partie 06</div>
+        <div class="section-title">📊 Où j'en suis vraiment ?</div>
+      </div>
+      <div class="summary-plus">+</div>
+    </summary>
+  <div class="section-body">
+  <div class="quiz-intro">
+    <div class="accent-line"></div>
+    <p>Ce questionnaire n'est pas un jugement. C'est un miroir. Réponds honnêtement — c'est la seule façon d'avoir une image juste de là où tu en es.</p>
+  </div>
+
+  <div class="quiz-section-title">🏋️ Training</div>
+  <div class="q-card">
+    <div class="q-num">Question 01 / 13</div>
+    <div class="q-text">Tes charges à l'entraînement</div>
+    <label class="answer"><input type="radio" name="q1" value="0"><div class="radio-dot"></div><div class="answer-label">Mes charges progressent chaque semaine ou toutes les deux semaines, je note mes séances et je peux te dire exactement ce que je soulevais il y a 3 mois</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q1" value="1"><div class="radio-dot"></div><div class="answer-label">Ça progresse parfois, mais je n'ai pas de suivi précis</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q1" value="2"><div class="radio-dot"></div><div class="answer-label">Je soulève à peu près les mêmes charges depuis plusieurs mois</div><div class="score-badge">2 pts</div></label>
+  </div>
+  <div class="q-card">
+    <div class="q-num">Question 02 / 13</div>
+    <div class="q-text">Ton programme</div>
+    <label class="answer"><input type="radio" name="q2" value="0"><div class="radio-dot"></div><div class="answer-label">Je suis le même programme depuis plus de 4 mois, je ne l'ai pas modifié et je le suis à la lettre</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q2" value="1"><div class="radio-dot"></div><div class="answer-label">J'ai un programme mais je le modifie souvent ou je pioche ailleurs</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q2" value="2"><div class="radio-dot"></div><div class="answer-label">J'ai changé de programme plus de deux fois cette année</div><div class="score-badge">2 pts</div></label>
+  </div>
+  <div class="q-card">
+    <div class="q-num">Question 03 / 13</div>
+    <div class="q-text">Tes séances</div>
+    <label class="answer"><input type="radio" name="q3" value="0"><div class="radio-dot"></div><div class="answer-label">Je sais précisément ce que "proche de l'échec" veut dire pour moi et je m'en approche sur chaque série</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q3" value="1"><div class="radio-dot"></div><div class="answer-label">Je travaille dur mais je ne suis pas vraiment sûre d'aller suffisamment loin</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q3" value="2"><div class="radio-dot"></div><div class="answer-label">Je finis mes séances sans vraiment savoir si j'ai suffisamment travaillé</div><div class="score-badge">2 pts</div></label>
+  </div>
+
+  <div class="quiz-section-title">🍽️ Nutrition</div>
+  <div class="q-card">
+    <div class="q-num">Question 04 / 13</div>
+    <div class="q-text">Ton apport calorique</div>
+    <label class="answer"><input type="radio" name="q4" value="0"><div class="radio-dot"></div><div class="answer-label">Je connais ma maintenance précisément et je sais exactement dans quel contexte calorique je suis en ce moment et pourquoi</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q4" value="1"><div class="radio-dot"></div><div class="answer-label">J'ai une vague idée mais rien de précis</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q4" value="2"><div class="radio-dot"></div><div class="answer-label">Je mange de façon intuitive sans vraiment savoir où j'en suis</div><div class="score-badge">2 pts</div></label>
+  </div>
+  <div class="q-card">
+    <div class="q-num">Question 05 / 13</div>
+    <div class="q-text">Tes protéines</div>
+    <label class="answer"><input type="radio" name="q5" value="0"><div class="radio-dot"></div><div class="answer-label">J'atteins 1,8g à 2g par kilo tous les jours et je répartis correctement mes prises sur la journée</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q5" value="1"><div class="radio-dot"></div><div class="answer-label">J'essaie mais je n'atteins probablement pas ce niveau de façon régulière</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q5" value="2"><div class="radio-dot"></div><div class="answer-label">Je n'ai jamais vraiment calculé mes apports en protéines</div><div class="score-badge">2 pts</div></label>
+  </div>
+  <div class="q-card">
+    <div class="q-num">Question 06 / 13</div>
+    <div class="q-text">Ta structure alimentaire</div>
+    <label class="answer"><input type="radio" name="q6" value="0"><div class="radio-dot"></div><div class="answer-label">Mon alimentation est structurée en semaine comme le weekend, en vacances comme en période de stress</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q6" value="1"><div class="radio-dot"></div><div class="answer-label">Ça tient en semaine mais le weekend ou en période de stress tout change</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q6" value="2"><div class="radio-dot"></div><div class="answer-label">Mon alimentation est chaotique — je ne sais jamais vraiment ce que je vais manger ni en quelle quantité</div><div class="score-badge">2 pts</div></label>
+  </div>
+
+  <div class="quiz-section-title">🧠 Mindset & alimentation</div>
+  <div class="q-card">
+    <div class="q-num">Question 07 / 13</div>
+    <div class="q-text">Ton rapport à la nourriture</div>
+    <label class="answer"><input type="radio" name="q7" value="0"><div class="radio-dot"></div><div class="answer-label">Aucun aliment n'est interdit, je ne culpabilise jamais après un repas et je ne pense pas à la nourriture en dehors des repas</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q7" value="1"><div class="radio-dot"></div><div class="answer-label">Il m'arrive de culpabiliser après certains repas et de vouloir compenser</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q7" value="2"><div class="radio-dot"></div><div class="answer-label">La nourriture prend beaucoup de place dans ma tête — je pense souvent à ce que j'ai mangé ou vais manger</div><div class="score-badge">2 pts</div></label>
+  </div>
+  <div class="q-card">
+    <div class="q-num">Question 08 / 13</div>
+    <div class="q-text">Ta régularité</div>
+    <label class="answer"><input type="radio" name="q8" value="0"><div class="radio-dot"></div><div class="answer-label">Je n'ai pas raté plus de deux semaines consécutives depuis un an, vacances incluses</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q8" value="1"><div class="radio-dot"></div><div class="answer-label">J'ai des périodes très régulières et des périodes où je décroche</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q8" value="2"><div class="radio-dot"></div><div class="answer-label">Je reconnais le cycle "je recommence" — j'ai redémarré plusieurs fois cette année</div><div class="score-badge">2 pts</div></label>
+  </div>
+  <div class="q-card">
+    <div class="q-num">Question 09 / 13</div>
+    <div class="q-text">Ton rapport à ton corps</div>
+    <label class="answer"><input type="radio" name="q9" value="0"><div class="radio-dot"></div><div class="answer-label">Je m'entraîne pour ce que mon corps peut faire — le miroir n'influence pas ma journée et je ne me compare pas</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q9" value="1"><div class="radio-dot"></div><div class="answer-label">Mon rapport à mon corps est compliqué — certains jours ça va, d'autres moins</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q9" value="2"><div class="radio-dot"></div><div class="answer-label">Je m'entraîne en grande partie parce que je ne me sens pas bien dans mon corps</div><div class="score-badge">2 pts</div></label>
+  </div>
+
+  <div class="quiz-section-title">🌀 Hormones & santé</div>
+  <div class="q-card">
+    <div class="q-num">Question 10 / 13</div>
+    <div class="q-text">Tes signaux corporels</div>
+    <label class="answer"><input type="radio" name="q10" value="0"><div class="radio-dot"></div><div class="answer-label">Mon cycle est régulier entre 25 et 35 jours, mes règles ne sont pas douloureuses, mon énergie est stable et ma récupération est bonne</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q10" value="1"><div class="radio-dot"></div><div class="answer-label">J'ai quelques signaux — fatigue, cycle irrégulier, SPM marqué — mais je n'y ai pas vraiment prêté attention</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q10" value="2"><div class="radio-dot"></div><div class="answer-label">Des signaux clairs que quelque chose ne va pas — règles douloureuses, fatigue chronique, cycle très irrégulier ou absent</div><div class="score-badge">2 pts</div></label>
+  </div>
+  <div class="q-card">
+    <div class="q-num">Question 11 / 13</div>
+    <div class="q-text">Tes bilans de santé</div>
+    <label class="answer"><input type="radio" name="q11" value="0"><div class="radio-dot"></div><div class="answer-label">Bilan sanguin complet dans les 6 derniers mois — fer, ferritine, vitamine D, thyroïde, bilan hormonal — tout dans les valeurs optimales</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q11" value="1"><div class="radio-dot"></div><div class="answer-label">J'ai fait un bilan récemment mais je ne sais pas exactement ce qui a été vérifié</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q11" value="2"><div class="radio-dot"></div><div class="answer-label">Pas de bilan depuis plus d'un an ou jamais fait de bilan complet</div><div class="score-badge">2 pts</div></label>
+  </div>
+
+  <div class="quiz-section-title">🪞 Vie perso & contexte</div>
+  <div class="q-card">
+    <div class="q-num">Question 12 / 13</div>
+    <div class="q-text">Ton contexte de vie</div>
+    <label class="answer"><input type="radio" name="q12" value="0"><div class="radio-dot"></div><div class="answer-label">Je dors entre 7h et 9h par nuit, mon stress est bas et gérable, j'ai suffisamment d'énergie pour m'entraîner et récupérer sans me sentir à bout</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q12" value="1"><div class="radio-dot"></div><div class="answer-label">Mon quotidien est chargé — stress, manque de sommeil ou charge mentale impactent parfois ma progression</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q12" value="2"><div class="radio-dot"></div><div class="answer-label">Niveau de stress chronique élevé, je dors mal et je sens que ça impacte tout le reste</div><div class="score-badge">2 pts</div></label>
+  </div>
+  <div class="q-card">
+    <div class="q-num">Question 13 / 13</div>
+    <div class="q-text">Ton histoire avec ton corps et la nourriture</div>
+    <label class="answer"><input type="radio" name="q13" value="0"><div class="radio-dot"></div><div class="answer-label">Mon rapport au corps et à la nourriture est pleinement sain — aucun schéma ancien, aucune blessure émotionnelle ne pèse sur ce que je fais aujourd'hui</div><div class="score-badge">0 pt</div></label>
+    <label class="answer"><input type="radio" name="q13" value="1"><div class="radio-dot"></div><div class="answer-label">Il y a des choses dans mon histoire qui influencent probablement mon rapport au corps ou à la nourriture, mais je ne les ai pas vraiment adressées</div><div class="score-badge">1 pt</div></label>
+    <label class="answer"><input type="radio" name="q13" value="2"><div class="radio-dot"></div><div class="answer-label">Je sais qu'il y a des blessures ou des schémas anciens qui conditionnent ma relation à mon corps et à la nourriture</div><div class="score-badge">2 pts</div></label>
+  </div>
+
+  <div class="submit-area">
+    <button class="btn-primary" id="submitBtn" style="border:none;">Voir mon résultat →</button>
+  </div>
+  </div>
+  </details>
+</div>
+
+</div><!-- /sections-wrap -->
+
+<div class="result-card" id="resultCard">
+  <div class="result-score" id="resultScore">—</div>
+  <div class="result-label">points sur 26</div>
+  <div class="result-accent"></div>
+  <div class="result-title" id="resultTitle"></div>
+  <div class="result-text" id="resultText"></div>
+</div>
+
+<div class="cta-stack" id="ctaStack">
+  <a href="https://forms.fillout.com/t/5DrWA5Lz2Pus" target="_blank" class="btn-primary">Remplir le formulaire de coaching →</a>
+  <a href="https://wa.me/33677705047" target="_blank" class="btn-secondary">💬 M'envoyer un message sur WhatsApp</a>
+</div>
+
+<div class="footer">
+  <p>RECODE Coaching · <span>@indianaafit</span></p>
+</div>
+
+<script>
+  document.querySelectorAll('.answer').forEach(opt => {
+    opt.addEventListener('click', function() {
+      this.closest('.q-card').querySelectorAll('.answer').forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+      this.querySelector('input').checked = true;
+      const answered = document.querySelectorAll('.answer.selected').length;
+      document.getElementById('progressFill').style.width = (answered/13*100) + '%';
+      document.getElementById('progressText').textContent = answered + ' / 13';
+      document.getElementById('progressWrap').style.display = 'flex';
+    });
+  });
+
+  document.getElementById('submitBtn').addEventListener('click', function() {
+    if (document.querySelectorAll('input[type="radio"]:checked').length < 13) { alert('Réponds à toutes les questions pour voir ton résultat.'); return; }
+    let score = 0;
+    document.querySelectorAll('input[type="radio"]:checked').forEach(i => score += parseInt(i.value));
+    document.getElementById('resultScore').textContent = score;
+    const titles = ['Les bases sont vraiment en place', 'Des fondations manquent', 'C\'est exactement pour ça qu\'un accompagnement existe'];
+    const texts = [
+      'C\'est rare. Tu as construit des fondations solides sur la durée. Un regard extérieur ciblé pourrait encore affiner certains points — mais tu es dans une minorité de pratiquantes qui ont vraiment posé les choses correctement.',
+      'Plusieurs éléments clés ne sont pas encore en place — et ils s\'influencent les uns les autres. Tu peux continuer seule, mais tu vas continuer à tourner en rond sur les mêmes points. Un accompagnement structuré t\'éviterait des mois de trial and error. C\'est exactement ce que je fais.',
+      'Ce n\'est pas un manque de volonté. Ce n\'est pas un manque de travail. C\'est qu\'il y a beaucoup de choses à adresser en même temps — et que sans structure et sans regard extérieur, c\'est presque impossible à démêler seule. Tu n\'as pas besoin de plus de contenu. Tu as besoin de quelqu\'un qui regarde ta situation dans sa globalité et t\'aide à mettre les bonnes choses en place, dans le bon ordre. C\'est exactement ce que je fais.'
+    ];
+    const idx = score <= 4 ? 0 : score <= 14 ? 1 : 2;
+    document.getElementById('resultTitle').textContent = titles[idx];
+    document.getElementById('resultText').textContent = texts[idx];
+    document.getElementById('resultCard').classList.add('visible');
+    document.getElementById('ctaStack').classList.add('visible');
+    document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', function(e) {
+      e.preventDefault();
+      const t = document.querySelector(this.getAttribute('href'));
+      if (t) t.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
