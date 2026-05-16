@@ -867,7 +867,7 @@
 
 <div class="cta-stack" id="ctaStack">
   <a href="https://forms.fillout.com/t/5DrWA5Lz2Pus" target="_blank" class="btn-primary">Remplir le formulaire de coaching →</a>
-  <a href="https://wa.me/33677705047" target="_blank" class="btn-secondary">💬 M'envoyer un message sur WhatsApp</a>
+  <a id="waBtn" href="https://wa.me/33677705047" target="_blank" class="btn-secondary">💬 J'aimerais qu'on en parle</a>
 </div>
 
 <div class="footer">
@@ -901,6 +901,11 @@
     const idx = score <= 4 ? 0 : score <= 14 ? 1 : 2;
     document.getElementById('resultTitle').textContent = titles[idx];
     document.getElementById('resultText').textContent = texts[idx];
+
+    // Inject score into WhatsApp URL
+    const waMsg = encodeURIComponent(`Bonjour Kevin, je viens de faire le questionnaire Les Basiques. Mon score est de ${score} / 26 et j'aimerais qu'on en parle.`);
+    document.getElementById('waBtn').href = `https://wa.me/33677705047?text=${waMsg}`;
+
     document.getElementById('resultCard').classList.add('visible');
     document.getElementById('ctaStack').classList.add('visible');
     document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
